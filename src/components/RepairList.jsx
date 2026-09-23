@@ -1,4 +1,8 @@
-function RepairList({ repairs }) {
+function RepairList({ repairs, onEdit, onDelete }) {
+    if (repairs.length === 0) {
+      return <p>Заявок нет</p>;
+    }
+  
     return (
       <table className="table">
         <thead>
@@ -24,8 +28,8 @@ function RepairList({ repairs }) {
                 </span>
               </td>
               <td>
-                <button>✏️</button>
-                <button>🗑️</button>
+                <button onClick={() => onEdit(r)}>✏️</button>
+                <button onClick={() => onDelete(r.id)}>🗑️</button>
               </td>
             </tr>
           ))}
