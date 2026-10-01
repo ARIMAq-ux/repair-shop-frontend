@@ -80,8 +80,46 @@ h2 {
   border: 1px solid #ccc;
 }
 
+<<<<<<< Updated upstream
 .table button {
   background: none;
+=======
+.subtitle {
+  color: #4a5568;
+}
+
+.form {
+  background: white;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form h2 {
+  margin: 0;
+}
+
+.form input,
+.form select,
+.form textarea {
+  padding: 8px 10px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.buttons button,
+.actions button {
+  padding: 8px 14px;
+>>>>>>> Stashed changes
   border: none;
   cursor: pointer;
   font-size: 16px;
@@ -96,17 +134,146 @@ h2 {
   font-size: 12px;
 }
 
-.status-Новая {
+.status-new {
   background: #bee3f8;
   color: #2c5282;
 }
 
-.status-Вработе {
+.status-diagnostics {
+  background: #e9d8fd;
+}
+
+.status-in_progress {
   background: #fefcbf;
   color: #744210;
 }
 
-.status-Завершена {
+.status-waiting_parts {
+  background: #feebc8;
+}
+
+.status-ready {
   background: #c6f6d5;
+<<<<<<< Updated upstream
   color: #22543d;
+=======
+}
+
+.status-completed {
+  background: #9ae6b4;
+}
+
+.status-cancelled {
+  background: #fed7d7;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.user-box button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #718096;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.user-box button:hover {
+  background: #4a5568;
+}
+
+.error {
+  padding: 10px 14px;
+  border-radius: 4px;
+  background: #fed7d7;
+  color: #822727;
+}
+
+.muted {
+  color: #718096;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  background: white;
+  padding: 28px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 320px;
+}
+
+.login-form h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.login-subtitle {
+  margin: 0;
+  color: #718096;
+  font-size: 14px;
+}
+
+.login-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.login-form input {
+  padding: 8px 10px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.login-form button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 4px;
+  background: #2b6cb0;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background: #245a94;
+}
+
+.login-form button:disabled {
+  background: #a0aec0;
+  cursor: default;
+}
+
+.login-hint {
+  margin: 0;
+  font-size: 13px;
+  color: #a0aec0;
+  text-align: center;
+>>>>>>> Stashed changes
 }
