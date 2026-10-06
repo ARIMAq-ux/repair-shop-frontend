@@ -1,6 +1,6 @@
 import { clearAuth, getToken } from "../auth/tokenStorage";
 
-// Адрес бэкенда. При необходимости задаётся через .env (VITE_API_URL).
+// Адрес бэкенда
 export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 export class ApiError extends Error {

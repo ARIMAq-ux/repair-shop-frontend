@@ -80,10 +80,6 @@ h2 {
   border: 1px solid #ccc;
 }
 
-<<<<<<< Updated upstream
-.table button {
-  background: none;
-=======
 .subtitle {
   color: #4a5568;
 }
@@ -119,7 +115,6 @@ h2 {
 .buttons button,
 .actions button {
   padding: 8px 14px;
->>>>>>> Stashed changes
   border: none;
   cursor: pointer;
   font-size: 16px;
@@ -154,9 +149,6 @@ h2 {
 
 .status-ready {
   background: #c6f6d5;
-<<<<<<< Updated upstream
-  color: #22543d;
-=======
 }
 
 .status-completed {
@@ -275,5 +267,4 @@ h2 {
   font-size: 13px;
   color: #a0aec0;
   text-align: center;
->>>>>>> Stashed changes
 }

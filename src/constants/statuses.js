@@ -1,5 +1,4 @@
 // Статусы заявки на бэкенде — enum RequestStatus (NEW, DIAGNOSTICS, ...).
-// Здесь им сопоставлены русские подписи и CSS-классы для отображения.
 export const STATUS_OPTIONS = [
   { value: "NEW", label: "Новая" },
   { value: "DIAGNOSTICS", label: "Диагностика" },

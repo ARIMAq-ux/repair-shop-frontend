@@ -13,8 +13,7 @@ function RepairsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Загрузка данных. Сеттеры вызываются в колбэках промиса —
-  // это не «синхронный setState в эффекте».
+  // Загрузка данных. Сеттеры вызываются в колбэках промиса
   const loadData = useCallback(() => {
     return Promise.all([repairApi.all(), repairApi.clients(), repairApi.devices()])
       .then(([repairsData, clientsData, devicesData]) => {

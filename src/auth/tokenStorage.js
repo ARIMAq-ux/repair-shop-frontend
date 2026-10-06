@@ -1,5 +1,4 @@
-// Хранилище JWT-токена. localStorage переживает перезагрузку страницы,
-// поэтому пользователь остаётся авторизованным до выхода или истечения токена.
+// Хранилище JWT-токена.
 const TOKEN_KEY = "repair_shop_token";
 const USERNAME_KEY = "repair_shop_username";
 
