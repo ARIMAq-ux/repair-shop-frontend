@@ -1,69 +1,78 @@
-import { useCallback, useEffect, useState } from "react";
-import repairApi from "../api/repair/repairApi";
+﻿import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import RepairForm from "../components/RepairForm";
 import RepairList from "../components/RepairList";
+import Spinner from "../components/Spinner";
 import { useAuth } from "../auth/useAuth";
+import {
+  fetchRepairs,
+  fetchClients,
+  fetchDevices,
+  addRepair,
+  updateRepair,
+  deleteRepair,
+  clearError,
+} from "../features/repairs/repairsSlice";
 
 function RepairsPage() {
   const { username, signOut } = useAuth();
-  const [repairs, setRepairs] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [devices, setDevices] = useState([]);
-  const [editing, setEditing] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const dispatch = useDispatch();
 
-  // Загрузка данных. Сеттеры вызываются в колбэках промиса
+  const repairs = useSelector((state) => state.repairs.repairs);
+  const clients = useSelector((state) => state.repairs.clients);
+  const devices = useSelector((state) => state.repairs.devices);
+  const loading = useSelector((state) => state.repairs.loading);
+  const error = useSelector((state) => state.repairs.error);
+  const deleteLoadingId = useSelector((state) => state.repairs.deleteLoadingId);
+
+  const [editing, setEditing] = useState(null);
+
   const loadData = useCallback(() => {
-    return Promise.all([repairApi.all(), repairApi.clients(), repairApi.devices()])
-      .then(([repairsData, clientsData, devicesData]) => {
-        setRepairs(repairsData);
-        setClients(clientsData);
-        setDevices(devicesData);
-        setError("");
-      })
-      .catch((err) => {
-        setError(err.message || "Не удалось загрузить данные");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    dispatch(fetchRepairs());
+    dispatch(fetchClients());
+    dispatch(fetchDevices());
+  }, [dispatch]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
   const handleSubmit = async (data) => {
-    setError("");
+    dispatch(clearError());
     try {
       if (editing) {
-        // PUT /api/requests/{id} — клиент, устройство и описание.
-        await repairApi.update(editing.id, {
-          clientId: data.clientId,
-          deviceId: data.deviceId,
-          problemDescription: data.problemDescription,
-        });
-        // Статус меняется отдельным эндпоинтом.
+        await dispatch(
+          updateRepair({
+            id: editing.id,
+            data: {
+              clientId: data.clientId,
+              deviceId: data.deviceId,
+              problemDescription: data.problemDescription,
+            },
+          })
+        ).unwrap();
         if (data.status !== editing.status) {
-          await repairApi.updateStatus(editing.id, { status: data.status });
+          await dispatch(
+            updateRepair({
+              id: editing.id,
+              data: { status: data.status },
+            })
+          ).unwrap();
         }
         setEditing(null);
       } else {
-        // POST /api/requests — отправляем статус сразу при создании.
-        const created = await repairApi.add({
-          clientId: data.clientId,
-          deviceId: data.deviceId,
-          problemDescription: data.problemDescription,
-          status: data.status,
-        });
-        if (data.status !== created.status) {
-          await repairApi.updateStatus(created.id, { status: data.status });
-        }
+        await dispatch(
+          addRepair({
+            clientId: data.clientId,
+            deviceId: data.deviceId,
+            problemDescription: data.problemDescription,
+            status: data.status,
+          })
+        ).unwrap();
       }
       await loadData();
-    } catch (err) {
-      setError(err.message || "Не удалось сохранить заявку");
+    } catch {
+      // Ошибка уже обработана в extraReducers (rejected -> state.error)
     }
   };
 
@@ -71,17 +80,37 @@ function RepairsPage() {
     if (!confirm("Удалить эту заявку?")) {
       return;
     }
-    setError("");
+    dispatch(clearError());
     try {
-      await repairApi.delete(id);
+      await dispatch(deleteRepair(id)).unwrap();
       if (editing && editing.id === id) {
         setEditing(null);
       }
       await loadData();
-    } catch (err) {
-      setError(err.message || "Не удалось удалить заявку");
+    } catch {
+      // Ошибка уже обработана в extraReducers (rejected -> state.error)
     }
   };
+
+  if (error) {
+    return (
+      <div className="app">
+        <div className="app-header">
+          <h1>Учёт заявок на ремонт техники</h1>
+          <div className="user-box">
+            <span>Пользователь: {username}</span>
+            <button type="button" onClick={signOut}>
+              Выйти
+            </button>
+          </div>
+        </div>
+        <p className="error">{error}</p>
+        <button type="button" onClick={() => dispatch(clearError())}>
+          Попробовать снова
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="app">
@@ -97,8 +126,6 @@ function RepairsPage() {
 
       <p className="subtitle">Всего заявок: {repairs.length}</p>
 
-      {error && <p className="error">{error}</p>}
-
       <RepairForm
         key={editing ? editing.id : "new"}
         clients={clients}
@@ -110,12 +137,13 @@ function RepairsPage() {
 
       <h2>Список заявок</h2>
       {loading ? (
-        <p className="muted">Загрузка…</p>
+        <Spinner size={32} text="Загрузка заявок…" />
       ) : (
         <RepairList
           repairs={repairs}
           onEdit={(repair) => setEditing(repair)}
           onDelete={handleDelete}
+          deleteLoadingId={deleteLoadingId}
         />
       )}
     </div>

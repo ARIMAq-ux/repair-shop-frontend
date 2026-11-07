@@ -1,6 +1,7 @@
 import { statusClassName, statusLabel } from "../constants/statuses";
+import Spinner from "./Spinner";
 
-function RepairList({ repairs, onEdit, onDelete }) {
+function RepairList({ repairs, onEdit, onDelete, deleteLoadingId }) {
   if (repairs.length === 0) {
     return <p className="muted">Заявок пока нет.</p>;
   }
@@ -31,8 +32,16 @@ function RepairList({ repairs, onEdit, onDelete }) {
               <button type="button" onClick={() => onEdit(r)}>
                 Редактировать
               </button>
-              <button type="button" onClick={() => onDelete(r.id)}>
-                Удалить
+              <button
+                type="button"
+                onClick={() => onDelete(r.id)}
+                disabled={deleteLoadingId === r.id}
+              >
+                {deleteLoadingId === r.id ? (
+                <Spinner size={16} />
+              ) : (
+                "Удалить"
+              )}
               </button>
             </td>
           </tr>
