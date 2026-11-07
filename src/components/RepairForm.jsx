@@ -51,7 +51,7 @@ function RepairForm({ clients, devices, editing, onSubmit, onCancel }) {
     });
 
     if (!editing) {
-      setForm(emptyForm);
+      setForm({ ...emptyForm });
     }
   };
 

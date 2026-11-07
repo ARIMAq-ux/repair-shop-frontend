@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import repairApi from "../api/repairApi";
+import repairApi from "../api/repair/repairApi";
 import RepairForm from "../components/RepairForm";
 import RepairList from "../components/RepairList";
-import { useAuth } from "../auth/auth-context";
+import { useAuth } from "../auth/useAuth";
 
 function RepairsPage() {
-  const { username, logout } = useAuth();
+  const { username, signOut } = useAuth();
   const [repairs, setRepairs] = useState([]);
   const [clients, setClients] = useState([]);
   const [devices, setDevices] = useState([]);
@@ -50,11 +50,12 @@ function RepairsPage() {
         }
         setEditing(null);
       } else {
-        // POST /api/requests — статус по умолчанию NEW на бэкенде.
+        // POST /api/requests — отправляем статус сразу при создании.
         const created = await repairApi.add({
           clientId: data.clientId,
           deviceId: data.deviceId,
           problemDescription: data.problemDescription,
+          status: data.status,
         });
         if (data.status !== created.status) {
           await repairApi.updateStatus(created.id, { status: data.status });
@@ -67,7 +68,7 @@ function RepairsPage() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Удалить эту заявку?")) {
+    if (!confirm("Удалить эту заявку?")) {
       return;
     }
     setError("");
@@ -88,7 +89,7 @@ function RepairsPage() {
         <h1>Учёт заявок на ремонт техники</h1>
         <div className="user-box">
           <span>Пользователь: {username}</span>
-          <button type="button" onClick={logout}>
+          <button type="button" onClick={signOut}>
             Выйти
           </button>
         </div>
