@@ -10,20 +10,27 @@ import {
   fetchDevices,
   addRepair,
   updateRepair,
+  updateRepairStatus,
   deleteRepair,
   clearError,
 } from "../features/repairs/repairsSlice";
+import {
+  selectRepairs,
+  selectClients,
+  selectLoading,
+  selectError,
+  selectDeleteLoadingId,
+} from "../features/repairs/repairsSelectors";
 
 function RepairsPage() {
   const { username, signOut } = useAuth();
   const dispatch = useDispatch();
 
-  const repairs = useSelector((state) => state.repairs.repairs);
-  const clients = useSelector((state) => state.repairs.clients);
-  const devices = useSelector((state) => state.repairs.devices);
-  const loading = useSelector((state) => state.repairs.loading);
-  const error = useSelector((state) => state.repairs.error);
-  const deleteLoadingId = useSelector((state) => state.repairs.deleteLoadingId);
+  const repairs = useSelector(selectRepairs);
+  const clients = useSelector(selectClients);
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
+  const deleteLoadingId = useSelector(selectDeleteLoadingId);
 
   const [editing, setEditing] = useState(null);
 
@@ -53,9 +60,9 @@ function RepairsPage() {
         ).unwrap();
         if (data.status !== editing.status) {
           await dispatch(
-            updateRepair({
+            updateRepairStatus({
               id: editing.id,
-              data: { status: data.status },
+              statusUpdate: { status: data.status },
             })
           ).unwrap();
         }
@@ -129,7 +136,6 @@ function RepairsPage() {
       <RepairForm
         key={editing ? editing.id : "new"}
         clients={clients}
-        devices={devices}
         editing={editing}
         onSubmit={handleSubmit}
         onCancel={() => setEditing(null)}

@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.14.0",
     "react": "^19.2.8",
+    "reselect": "^5.1.0",
     "react-dom": "^19.2.8",
     "react-redux": "^9.3.1",
     "react-router-dom": "^7.18.4"

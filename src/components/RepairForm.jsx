@@ -1,5 +1,11 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { STATUS_OPTIONS } from "../constants/statuses";
+import { makeSelectDevicesByClient } from "../features/repairs/repairsSelectors";
+
+// Экземпляр селектора создаётся один раз на уровне модуля, чтобы его внутренний
+// кэш (reselect 5 хранит последний вызов) не сбрасывался при каждом рендере.
+const selectClientDevices = makeSelectDevicesByClient();
 
 const emptyForm = {
   problemDescription: "",
@@ -9,7 +15,7 @@ const emptyForm = {
 };
 
 // Форма работает в двух режимах: создание (editing = null) и редактирование.
-function RepairForm({ clients, devices, editing, onSubmit, onCancel }) {
+function RepairForm({ clients, editing, onSubmit, onCancel }) {
   const [form, setForm] = useState(() =>
     editing
       ? {
@@ -32,8 +38,8 @@ function RepairForm({ clients, devices, editing, onSubmit, onCancel }) {
     });
   };
 
-  const clientDevices = devices.filter(
-    (device) => String(device.clientId) === form.clientId
+  const clientDevices = useSelector((state) =>
+    selectClientDevices(state, form.clientId)
   );
 
   const handleSubmit = (event) => {
