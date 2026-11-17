@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../auth/auth-context";
 import { validateRegisterForm, hasErrors } from "../validation/authValidation";
 
 function RegisterPage() {

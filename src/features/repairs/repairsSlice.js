@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import repairApi from "../../api/repair/repairApi";
 
-// --- Асинхронные экшены (thunks) ---
+// Асинхронные экшены (thunks)
 
 export const fetchRepairs = createAsyncThunk(
   "repairs/fetchRepairs",
@@ -48,6 +48,17 @@ export const deleteRepair = createAsyncThunk(
   }
 );
 
+export const updateRepairStatus = createAsyncThunk(
+  "repairs/updateRepairStatus",
+  async ({ id, statusUpdate }, { rejectWithValue }) => {
+    try {
+      return await repairApi.updateStatus(id, statusUpdate);
+    } catch (err) {
+      return rejectWithValue(err.message || "Не удалось обновить статус");
+    }
+  }
+);
+
 export const fetchClients = createAsyncThunk(
   "repairs/fetchClients",
   async (_, { rejectWithValue }) => {
@@ -70,7 +81,7 @@ export const fetchDevices = createAsyncThunk(
   }
 );
 
-// --- Начальное состояние ---
+// Начальное состояние
 
 const initialState = {
   repairs: [],
@@ -81,7 +92,7 @@ const initialState = {
   deleteLoadingId: null,
 };
 
-// --- slice ---
+// Слайс
 
 const repairsSlice = createSlice({
   name: "repairs",
@@ -96,7 +107,7 @@ const repairsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // --- fetchRepairs ---
+    // fetchRepairs
     builder.addCase(fetchRepairs.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -111,7 +122,7 @@ const repairsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // --- addRepair ---
+    // addRepair
     builder.addCase(addRepair.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -126,7 +137,7 @@ const repairsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // --- updateRepair ---
+    // updateRepair
     builder.addCase(updateRepair.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -144,7 +155,7 @@ const repairsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // --- deleteRepair ---
+    // deleteRepair
     builder.addCase(deleteRepair.pending, (state, action) => {
       state.deleteLoadingId = action.meta.arg;
       state.error = null;
@@ -158,7 +169,25 @@ const repairsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // --- fetchClients ---
+    // updateRepairStatus
+    builder.addCase(updateRepairStatus.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(updateRepairStatus.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      const index = state.repairs.findIndex((r) => r.id === action.payload.id);
+      if (index !== -1) {
+        state.repairs[index] = action.payload;
+      }
+    });
+    builder.addCase(updateRepairStatus.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    // fetchClients
     builder.addCase(fetchClients.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -173,7 +202,7 @@ const repairsSlice = createSlice({
       state.error = action.payload;
     });
 
-    // --- fetchDevices ---
+    // fetchDevices
     builder.addCase(fetchDevices.pending, (state) => {
       state.loading = true;
       state.error = null;

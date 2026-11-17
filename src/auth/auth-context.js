@@ -1,4 +1,13 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
-// Только создание контекста. Хук доступа к нему — в useAuth.js.
+// Контекст авторизации.
 export const AuthContext = createContext(null);
+
+// Хук доступа к контексту авторизации.
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth должен использоваться внутри AuthProvider");
+  }
+  return context;
+}
